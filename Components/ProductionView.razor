@@ -1,0 +1,86 @@
+﻿@using IpmProductionTool.ViewModel;
+
+<h3>Upgrades</h3>
+
+<table>
+    <tr>
+        <td>Underforge</td>
+        <td><button @onclick="DecUnderforge">-</button></td>
+        <td><input type="text" @bind="@UnderForgeLevel" width="20"></td>
+        <td><button @onclick="IncUnderforge">+</button></td>
+    </tr>
+    <tr>
+        <td>Dorms</td>
+        <td><button @onclick="DecDorms">-</button></td>
+        <td><input type="text" @bind="@DormsLevel" width="20"></td>
+        <td><button @onclick="IncDorms">+</button></td>
+    </tr>
+</table>
+
+
+<h3>Alloys</h3>
+
+<table>
+    @foreach (var alloy in alloys)
+    {
+        @alloy
+    }
+</table>
+
+<h3>Items</h3>
+
+<table>
+    @foreach (var item in items)
+    {
+        @item
+    }
+</table>
+
+@code {
+    public List<MarkupString> alloys;
+    public List<MarkupString> items;
+
+    private int underforgeLevel;
+    private string? UnderForgeLevel { get => underforgeLevel.ToString(); set { return; } }
+
+    private int dormsLevel;
+    private string? DormsLevel { get => dormsLevel.ToString(); set { return; } }
+
+    protected override void OnInitialized()
+    {
+        underforgeLevel = 0;
+        dormsLevel = 0;
+        Recalculate();
+    }
+
+    private void Recalculate()
+    {
+        var vm = new CalculatorVm();
+        alloys = vm.GetAlloys(underforgeLevel, dormsLevel);
+        items = vm.GetItems(underforgeLevel, dormsLevel);
+    }
+
+    private void DecUnderforge()
+    {
+        if (underforgeLevel > 0) underforgeLevel--;
+        Recalculate();
+    }
+
+    private void IncUnderforge()
+    {
+        if (underforgeLevel < 11) underforgeLevel++;
+        Recalculate();
+    }
+
+    private void DecDorms()
+    {
+        if (dormsLevel > 0) dormsLevel--;
+        Recalculate();
+    }
+
+    private void IncDorms()
+    {
+        if (dormsLevel < 11) dormsLevel++;
+        Recalculate();
+    }
+}
